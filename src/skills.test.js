@@ -1,8 +1,27 @@
-const fs = require('fs-extra');
 const path = require('path');
 
-jest.mock('fs-extra');
-jest.mock('glob');
+// Create mock functions
+const mockEnsureDir = jest.fn();
+const mockWriteFile = jest.fn();
+const mockRemove = jest.fn();
+const mockReadFile = jest.fn();
+
+// Mock fs-extra before requiring the skills module
+jest.doMock('fs-extra', () => ({
+  ensureDir: mockEnsureDir,
+  writeFile: mockWriteFile,
+  remove: mockRemove,
+  readFile: mockReadFile
+}));
+
+// Create mock functions for glob
+const mockGlobSync = jest.fn();
+
+jest.doMock('glob', () => ({
+  sync: mockGlobSync
+}));
+
+const fs = require('fs-extra');
 
 describe('Skills Tests', () => {
   let skills;
@@ -15,19 +34,19 @@ describe('Skills Tests', () => {
     process.env.NODE_ENV = 'test';
 
     // Mock fs operations
-    fs.ensureDir.mockResolvedValue();
-    fs.writeFile.mockResolvedValue();
-    fs.remove.mockResolvedValue();
+    mockEnsureDir.mockResolvedValue();
+    mockWriteFile.mockResolvedValue();
+    mockRemove.mockResolvedValue();
 
     // Mock glob to return skill files
-    const glob = require('glob');
-    glob.sync.mockReturnValue([
+    mockGlobSync.mockReturnValue([
       '.claude/skills/test-skill/SKILL.md',
-      '.claude/skills/another-skill/SKILL.md'
+      '.claude/skills/another-skill/SKILL.md',
+      '.claude/skills/error-skill/SKILL.md'
     ]);
 
     // Mock fs.readFile to return skill content
-    fs.readFile.mockImplementation((filePath) => {
+    mockReadFile.mockImplementation((filePath) => {
       if (filePath.includes('test-skill')) {
         return Promise.resolve(`---
 name: Test Skill
@@ -48,10 +67,22 @@ description: Another test skill
 
 This is another test skill.
 `);
+      } else if (filePath.includes('error-skill')) {
+        return Promise.resolve(`---
+name: Error Skill
+description: A skill that throws errors for testing
+---
+
+# Error Skill
+
+This skill intentionally throws errors for testing error handling.
+`);
       }
       return Promise.resolve('');
     });
 
+    // Clear module cache and require fresh
+    delete require.cache[require.resolve('../src/skills/index.js')];
     skills = require('../src/skills/index.js');
   });
 
@@ -64,7 +95,7 @@ This is another test skill.
     const loadedSkills = skills.getSkills();
 
     expect(loadedSkills).toBeDefined();
-    expect(Object.keys(loadedSkills).length).toBeGreaterThan(0);
+    expect(loadedSkills.size).toBeGreaterThan(0);
   });
 
   test('should get skill by name', async () => {
@@ -112,19 +143,8 @@ This is another test skill.
   test('should handle skill execution errors', async () => {
     await skills.loadSkills();
 
-    // Mock a skill that throws an error
-    const originalGetSkill = skills.getSkill;
-    skills.getSkill = jest.fn().mockReturnValue({
-      name: 'Error Skill',
-      description: 'A skill that throws errors',
-      execute: jest.fn().mockRejectedValue(new Error('Skill execution failed'))
-    });
-
-    await expect(skills.executeSkill('error-skill', {}))
+    await expect(skills.executeSkill('Error Skill', {}))
       .rejects
-      .toThrow('Skill execution failed');
-      
-    // Restore original method
-    skills.getSkill = originalGetSkill;
+      .toThrow('Failed to execute skill \'Error Skill\': Skill execution failed');
   });
 });

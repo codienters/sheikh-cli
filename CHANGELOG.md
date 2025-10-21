@@ -5,6 +5,34 @@ All notable changes to Sheikh-CLI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **Enhanced Test Coverage**: Added comprehensive unit tests for uncovered code paths
+- **Integration Test Suite**: Added integration tests for core functionality
+- **JSDoc Documentation**: Added comprehensive JSDoc comments throughout the codebase
+- **Mock Test Data**: Created mock skill and agent files for testing
+- **Robust Error Handling**: Enhanced error handling in agentic engine for undefined content
+
+### Changed
+- **Test Infrastructure**: Refactored Jest mocking to use `jest.doMock` for better module isolation
+- **Agentic Engine**: Made `extractPatterns` and `analyzeFile` methods more robust for test environments
+- **Skills Manager**: Enhanced error handling for skill execution failures
+- **README Documentation**: Updated package name and repository URLs, fixed merge conflicts
+
+### Fixed
+- **Test Failures**: Fixed multiple test failures related to mocking and assertions
+- **Map Object Handling**: Corrected test assertions to handle Map objects returned by managers
+- **Encoding Issues**: Fixed expected encoding format in test assertions
+- **Merge Conflicts**: Resolved merge conflicts in README.md
+- **Undefined Content**: Fixed TypeError issues when processing undefined content in tests
+
+### Technical Improvements
+- **Module Cache Management**: Added proper module cache clearing in tests
+- **Mock Function Definitions**: Improved mock function definitions for better test reliability
+- **Test Data Consistency**: Ensured test data matches expected formats and values
+- **Error Message Validation**: Enhanced error message validation in tests
+
 ## [2.0.0] - 2025-01-27
 
 ### Added

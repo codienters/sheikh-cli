@@ -2,10 +2,10 @@
 
 > **Powerful AI capabilities in your terminal. Build agents and workflows with our API. Turn hours-long workflows into a single command.**
 
-[![npm version](https://badge.fury.io/js/sheikh-cli.svg)](https://badge.fury.io/js/sheikh-cli)
+[![npm version](https://badge.fury.io/js/@codienters/sheikh-cli.svg)](https://badge.fury.io/js/@codienters/sheikh-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen.svg)](https://nodejs.org/)
-[![CI/CD Pipeline](https://github.com/sheikh-cli/sheikh-cli/workflows/Agentic%20CI/CD%20Pipeline/badge.svg)](https://github.com/sheikh-cli/sheikh-cli/actions)
+[![CI/CD Pipeline](https://github.com/codienters/sheikh-cli/workflows/Agentic%20CI/CD%20Pipeline/badge.svg)](https://github.com/codienters/sheikh-cli/actions)
 
 ## 🚀 What is Sheikh-CLI?
 
@@ -50,13 +50,13 @@ Sheikh-CLI is an **agentic coding tool** that lives in your terminal and helps y
 ### Quick Install
 
 ```bash
-npm install -g sheikh-cli
+npm install -g @codienters/sheikh-cli
 ```
 
 ### From Source
 
 ```bash
-git clone https://github.com/sheikh-cli/sheikh-cli.git
+git clone https://github.com/codienters/sheikh-cli.git
 cd sheikh-cli
 npm install
 npm link
@@ -353,7 +353,7 @@ npm run test:e2e
 ### Setup
 
 ```bash
-git clone https://github.com/sheikh-cli/sheikh-cli.git
+git clone https://github.com/codienters/sheikh-cli.git
 cd sheikh-cli
 npm install
 ```
@@ -424,7 +424,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Maintainer**: Sheikh-CLI Team
 - **Email**: support@sheikh-cli.dev
-- **GitHub**: https://github.com/sheikh-cli/sheikh-cli
+- **GitHub**: https://github.com/codienters/sheikh-cli
 
 ## 🙏 Acknowledgments
 
@@ -437,5 +437,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Ready to give yourself an unfair advantage?** Install Sheikh-CLI today and experience the future of AI-powered development.
 
 ```bash
-npm install -g sheikh-cli
+npm install -g @codienters/sheikh-cli
 sheikh chat --agentic
+```

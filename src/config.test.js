@@ -1,7 +1,20 @@
-const fs = require('fs-extra');
 const path = require('path');
 
-jest.mock('fs-extra');
+// Create mock functions
+const mockPathExists = jest.fn();
+const mockReadJson = jest.fn();
+const mockWriteJson = jest.fn();
+const mockEnsureDir = jest.fn();
+
+// Mock fs-extra before requiring the config module
+jest.doMock('fs-extra', () => ({
+  pathExists: mockPathExists,
+  readJson: mockReadJson,
+  writeJson: mockWriteJson,
+  ensureDir: mockEnsureDir
+}));
+
+const fs = require('fs-extra');
 
 describe('Config Tests', () => {
   let config;
@@ -14,14 +27,16 @@ describe('Config Tests', () => {
     process.env.NODE_ENV = 'test';
 
     // Mock fs operations
-    fs.pathExists.mockResolvedValue(true);
-    fs.readJson.mockResolvedValue({
+    mockPathExists.mockResolvedValue(true);
+    mockReadJson.mockResolvedValue({
       apiProvider: 'anthropic',
       apiModelId: 'claude-3-5-sonnet-20241022'
     });
-    fs.writeJson.mockResolvedValue();
-    fs.ensureDir.mockResolvedValue();
+    mockWriteJson.mockResolvedValue();
+    mockEnsureDir.mockResolvedValue();
 
+    // Clear module cache and require fresh
+    delete require.cache[require.resolve('../src/config.js')];
     config = require('../src/config.js');
   });
 
@@ -43,7 +58,7 @@ describe('Config Tests', () => {
 
     await config.saveConfig(configData);
 
-    expect(fs.writeJson).toHaveBeenCalledWith(
+    expect(mockWriteJson).toHaveBeenCalledWith(
       expect.stringContaining('config.json'),
       configData,
       { spaces: 2 }

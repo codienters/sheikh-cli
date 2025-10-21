@@ -1,8 +1,27 @@
-const fs = require('fs-extra');
 const path = require('path');
 
-jest.mock('fs-extra');
-jest.mock('glob');
+// Create mock functions
+const mockEnsureDir = jest.fn();
+const mockWriteFile = jest.fn();
+const mockUnlink = jest.fn();
+const mockReadFile = jest.fn();
+
+// Mock fs-extra before requiring the agents module
+jest.doMock('fs-extra', () => ({
+  ensureDir: mockEnsureDir,
+  writeFile: mockWriteFile,
+  unlink: mockUnlink,
+  readFile: mockReadFile
+}));
+
+// Create mock functions for glob
+const mockGlobSync = jest.fn();
+
+jest.doMock('glob', () => ({
+  sync: mockGlobSync
+}));
+
+const fs = require('fs-extra');
 
 describe('Agents Tests', () => {
   let agents;
@@ -15,19 +34,18 @@ describe('Agents Tests', () => {
     process.env.NODE_ENV = 'test';
 
     // Mock fs operations
-    fs.ensureDir.mockResolvedValue();
-    fs.writeFile.mockResolvedValue();
-    fs.unlink.mockResolvedValue();
+    mockEnsureDir.mockResolvedValue();
+    mockWriteFile.mockResolvedValue();
+    mockUnlink.mockResolvedValue();
 
     // Mock glob to return agent files
-    const glob = require('glob');
-    glob.sync.mockReturnValue([
+    mockGlobSync.mockReturnValue([
       '.claude/agents/debugger.md',
       '.claude/agents/test-runner.md'
     ]);
 
     // Mock fs.readFile to return agent content
-    fs.readFile.mockImplementation((filePath) => {
+    mockReadFile.mockImplementation((filePath) => {
       if (filePath.includes('debugger.md')) {
         return Promise.resolve(`---
 name: debugger
@@ -56,6 +74,8 @@ You are an expert in test automation.
       return Promise.resolve('');
     });
 
+    // Clear module cache and require fresh
+    delete require.cache[require.resolve('../src/agents/index.js')];
     agents = require('../src/agents/index.js');
   });
 
@@ -68,7 +88,7 @@ You are an expert in test automation.
     const loadedAgents = agents.getAgents();
 
     expect(loadedAgents).toBeDefined();
-    expect(Object.keys(loadedAgents).length).toBeGreaterThan(0);
+    expect(loadedAgents.size).toBeGreaterThan(0);
   });
 
   test('should get agent by name', async () => {
@@ -132,10 +152,10 @@ You are an expert in test automation.
 
     await agents.createAgent(agentData);
 
-    expect(fs.writeFile).toHaveBeenCalledWith(
+    expect(mockWriteFile).toHaveBeenCalledWith(
       expect.stringContaining('new-agent.md'),
       expect.stringContaining('---'),
-      'utf-8'
+      'utf8'
     );
   });
 
@@ -151,7 +171,7 @@ You are an expert in test automation.
 
     await agents.deleteAgent('debugger');
 
-    expect(fs.unlink).toHaveBeenCalledWith(
+    expect(mockUnlink).toHaveBeenCalledWith(
       expect.stringContaining('debugger.md')
     );
   });

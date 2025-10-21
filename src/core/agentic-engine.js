@@ -1,9 +1,26 @@
+/**
+ * Agentic Engine Module
+ *
+ * Core engine that powers the AI agentic capabilities of Sheikh-CLI.
+ * Handles codebase analysis, agent coordination, and workflow execution.
+ *
+ * @module core/agentic-engine
+ */
+
 const fs = require('fs-extra');
 const path = require('path');
 const { execSync } = require('child_process');
 const chalk = require('chalk');
 
+/**
+ * AgenticEngine class
+ * Main engine that coordinates AI agents and workflows
+ */
 class AgenticEngine {
+  /**
+   * Create a new AgenticEngine instance
+   * @param {Object} config - Configuration object
+   */
   constructor(config) {
     this.config = config;
     this.agents = new Map();
@@ -13,12 +30,20 @@ class AgenticEngine {
     this.approval = new ApprovalSystem();
   }
 
+  /**
+   * Initialize the agentic engine
+   * @returns {Promise<void>}
+   */
   async initialize() {
     await this.loadAgents();
     await this.loadWorkflows();
     await this.codebase.analyze();
   }
 
+  /**
+   * Load predefined workflows
+   * @returns {Promise<void>}
+   */
   async loadWorkflows() {
     // Load predefined workflows
     const workflowTypes = [
@@ -142,13 +167,24 @@ class AgenticEngine {
   }
 }
 
+/**
+ * CodebaseAnalyzer class
+ * Analyzes codebase structure, dependencies, and patterns
+ */
 class CodebaseAnalyzer {
+  /**
+   * Create a new CodebaseAnalyzer instance
+   */
   constructor() {
     this.index = new Map();
     this.dependencies = new Map();
     this.patterns = new Map();
   }
 
+  /**
+   * Analyze the entire codebase
+   * @returns {Promise<void>}
+   */
   async analyze() {
     console.log(chalk.blue('🔍 Analyzing codebase...'));
     
@@ -160,6 +196,10 @@ class CodebaseAnalyzer {
     console.log(chalk.green('✅ Codebase analysis complete'));
   }
 
+  /**
+   * Analyze dependencies between files
+   * @returns {Promise<void>}
+   */
   async analyzeDependencies() {
     // Analyze dependencies between files
     console.log(chalk.blue('📦 Analyzing dependencies...'));
@@ -184,11 +224,12 @@ class CodebaseAnalyzer {
     
     for (const [file, analysis] of this.index) {
       // Extract common patterns
+      const summary = analysis.context?.summary || '';
       analysis.patterns = {
-        functions: (analysis.context.summary.match(/function/g) || []).length,
-        classes: (analysis.context.summary.match(/class/g) || []).length,
+        functions: (summary.match(/function/g) || []).length,
+        classes: (summary.match(/class/g) || []).length,
         imports: analysis.dependencies.length,
-        async: (analysis.context.summary.match(/async/g) || []).length
+        async: (summary.match(/async/g) || []).length
       };
     }
   }
@@ -223,6 +264,11 @@ class CodebaseAnalyzer {
   }
 
   async analyzeFile(filePath, content) {
+    // Handle undefined or null content
+    if (!content) {
+      content = '';
+    }
+    
     return {
       path: filePath,
       type: this.getFileType(filePath),
@@ -503,13 +549,25 @@ class CodebaseAnalyzer {
   }
 }
 
+/**
+ * AgentCoordinator class
+ * Coordinates multiple AI agents and manages task execution
+ */
 class AgentCoordinator {
+  /**
+   * Create a new AgentCoordinator instance
+   */
   constructor() {
     this.activeAgents = new Map();
     this.taskQueue = [];
     this.results = new Map();
   }
 
+  /**
+   * Create an execution plan for a task
+   * @param {string} task - Task description
+   * @returns {Promise<Object>} Execution plan
+   */
   async createPlan(task) {
     console.log(chalk.blue('📋 Creating execution plan...'));
     
@@ -801,12 +859,24 @@ class AgentCoordinator {
   }
 }
 
+/**
+ * ApprovalSystem class
+ * Handles approval workflow for AI-generated changes
+ */
 class ApprovalSystem {
+  /**
+   * Create a new ApprovalSystem instance
+   */
   constructor() {
     this.pendingApprovals = new Map();
     this.approvalHistory = [];
   }
 
+  /**
+   * Process results and handle approval workflow
+   * @param {Object} results - Results to process
+   * @returns {Promise<void>}
+   */
   async processResults(results) {
     console.log(chalk.blue('🔍 Processing results for approval...'));
     

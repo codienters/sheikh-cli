@@ -1,5 +1,16 @@
 #!/usr/bin/env node
 
+/**
+ * Sheikh-CLI Main Entry Point
+ * 
+ * This is the main CLI application that provides AI-powered development tools
+ * with multi-provider support, custom skills, and agents.
+ * 
+ * @fileoverview Main CLI entry point for Sheikh-CLI
+ * @author Sheikh-CLI Team
+ * @version 2.0.0
+ */
+
 const { Command } = require('commander');
 const chalk = require('chalk');
 const ora = require('ora');
@@ -17,6 +28,17 @@ program
   .description('AI agents your unfair advantage - powerful AI capabilities in your terminal')
   .version('1.0.0');
 
+/**
+ * Chat command handler
+ * Starts an interactive chat session with AI capabilities
+ * @param {Object} options - Command options
+ * @param {string} [options.provider] - AI provider to use
+ * @param {string} [options.model] - Model to use
+ * @param {boolean} [options.fullAuto] - Run in fully automated mode
+ * @param {boolean} [options.autoApproveMcp] - Automatically approve all MCP tool usage requests
+ * @param {string} [options.customInstructions] - Custom instructions for the task
+ * @param {string} [options.workspace] - Custom workspace directory path
+ */
 // Chat command
 program
   .command('chat')
@@ -46,6 +68,14 @@ program
     }
   });
 
+/**
+ * Configuration command handler
+ * Manages Sheikh-CLI configuration settings
+ * @param {Object} options - Command options
+ * @param {boolean} [options.init] - Initialize configuration file
+ * @param {boolean} [options.show] - Show current configuration
+ * @param {boolean} [options.validate] - Validate current configuration
+ */
 // Configuration command
 program
   .command('config')
@@ -80,6 +110,14 @@ program
     }
   });
 
+/**
+ * Agents command handler
+ * Manages AI agents and their capabilities
+ * @param {Object} options - Command options
+ * @param {boolean} [options.list] - List all available agents
+ * @param {string} [options.create] - Create a new custom agent
+ * @param {string} [options.delete] - Delete an agent
+ */
 // Agents command
 program
   .command('agents')
@@ -114,6 +152,14 @@ program
     }
   });
 
+/**
+ * Skills command handler
+ * Manages custom skills and capabilities
+ * @param {Object} options - Command options
+ * @param {boolean} [options.list] - List all available skills
+ * @param {string} [options.create] - Create a new custom skill
+ * @param {string} [options.delete] - Delete a skill
+ */
 // Skills command
 program
   .command('skills')
@@ -157,7 +203,10 @@ if (process.env.NODE_ENV !== 'test') {
   }
 }
 
-// Helper functions
+/**
+ * Load configuration from file or return default configuration
+ * @returns {Promise<Object>} Configuration object
+ */
 async function loadConfig() {
   const configPath = path.join(process.cwd(), '.sheikh', 'config.json');
   
@@ -168,6 +217,10 @@ async function loadConfig() {
   return getDefaultConfig();
 }
 
+/**
+ * Get default configuration object
+ * @returns {Object} Default configuration
+ */
 function getDefaultConfig() {
   return {
     apiProvider: 'anthropic',
@@ -185,6 +238,11 @@ function getDefaultConfig() {
   };
 }
 
+/**
+ * Validate configuration object
+ * @param {Object} config - Configuration to validate
+ * @returns {Object} Validation result with valid boolean and optional error message
+ */
 function validateConfig(config) {
   const validProviders = ['anthropic', 'openai', 'aws', 'google', 'ollama'];
   
@@ -205,6 +263,10 @@ function validateConfig(config) {
   return { valid: true };
 }
 
+/**
+ * Initialize configuration file with default settings
+ * @returns {Promise<void>}
+ */
 async function initializeConfig() {
   const configPath = path.join(process.cwd(), '.sheikh', 'config.json');
   await fs.ensureDir(path.dirname(configPath));
@@ -215,8 +277,16 @@ async function initializeConfig() {
   console.log(chalk.green('Configuration file initialized at:'), configPath);
 }
 
-// Chat Session Class
+/**
+ * Chat Session Class
+ * Handles interactive chat sessions with AI capabilities
+ */
 class ChatSession {
+  /**
+   * Create a new chat session
+   * @param {Object} config - Configuration object
+   * @param {Object} options - Command line options
+   */
   constructor(config, options) {
     this.config = config;
     this.options = options;
@@ -225,6 +295,10 @@ class ChatSession {
     this.inquirer = require('inquirer');
   }
 
+  /**
+   * Start the interactive chat session
+   * @returns {Promise<void>}
+   */
   async startChat() {
     this.isRunning = true;
     
@@ -267,6 +341,11 @@ class ChatSession {
     }
   }
 
+  /**
+   * Process a user message and generate AI response
+   * @param {string} message - User message to process
+   * @returns {Promise<void>}
+   */
   async processMessage(message) {
     const spinner = ora('Processing message...').start();
     
@@ -294,6 +373,11 @@ class ChatSession {
     }
   }
 
+  /**
+   * Handle slash commands in chat
+   * @param {string} command - Slash command to handle
+   * @returns {Promise<void>}
+   */
   async handleSlashCommand(command) {
     const [cmd, ...args] = command.slice(1).split(' ');
     
@@ -320,6 +404,10 @@ class ChatSession {
     }
   }
 
+  /**
+   * List available agents
+   * @returns {Promise<void>}
+   */
   async listAgents() {
     console.log(chalk.blue('\n🤖 Available Agents:'));
     console.log(chalk.cyan('  • debugger - Debugging specialist'));
@@ -329,6 +417,10 @@ class ChatSession {
     console.log(chalk.cyan('  • git-helper - Git operations expert'));
   }
 
+  /**
+   * List available skills
+   * @returns {Promise<void>}
+   */
   async listSkills() {
     console.log(chalk.blue('\n🛠️ Available Skills:'));
     console.log(chalk.cyan('  • code-review - Code quality analysis'));
@@ -337,11 +429,19 @@ class ChatSession {
     console.log(chalk.cyan('  • documentation - Documentation generation'));
   }
 
+  /**
+   * Show current configuration
+   * @returns {Promise<void>}
+   */
   async showConfig() {
     console.log(chalk.blue('\n⚙️ Current Configuration:'));
     console.log(JSON.stringify(this.config, null, 2));
   }
 
+  /**
+   * Show conversation history
+   * @returns {void}
+   */
   showHistory() {
     console.log(chalk.blue('\n📚 Conversation History:'));
     
