@@ -1,6 +1,6 @@
 {
   "name": "@codienters/sheikh-cli",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "AI agents your unfair advantage - powerful AI capabilities in your terminal",
   "main": "src/cli.js",
   "bin": {
