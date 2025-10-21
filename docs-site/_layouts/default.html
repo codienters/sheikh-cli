@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  {% seo %}
+  
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{{ '/assets/images/favicon.png' | relative_url }}">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- Syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
+  
+  <!-- Custom CSS -->
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --secondary-color: #1e40af;
+      --accent-color: #3b82f6;
+      --text-color: #1f2937;
+      --bg-color: #ffffff;
+      --border-color: #e5e7eb;
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+    }
+    
+    .navbar {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      box-shadow: var(--shadow);
+    }
+    
+    .hero {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: white;
+      padding: 4rem 0;
+    }
+    
+    .card {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-2px);
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+    }
+    
+    .language-switcher {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    
+    .footer {
+      background-color: #1f2937;
+      color: white;
+      padding: 2rem 0;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Language Switcher -->
+  <div class="language-switcher">
+    <div class="btn-group" role="group">
+      <a href="/" class="btn btn-sm btn-outline-light {% if page.lang == 'en' %}active{% endif %}">EN</a>
+      <a href="/bn/" class="btn btn-sm btn-outline-light {% if page.lang == 'bn' %}active{% endif %}">বাংলা</a>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{{ '/' | relative_url }}">
+        <i class="fas fa-robot me-2"></i>
+        Sheikh-CLI
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          {% for item in site.navigation %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ item.url | relative_url }}">
+              {% if item.icon %}<i class="fas fa-{{ item.icon }} me-1"></i>{% endif %}
+              {{ item.title }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    {{ content }}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Sheikh-CLI</h5>
+          <p>{{ site.description }}</p>
+          <div class="social-links">
+            {% for social in site.social %}
+            <a href="{{ social.url }}" class="text-light me-3" target="_blank" rel="noopener">
+              <i class="fab fa-{{ social.icon }}"></i>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <h5>Developer Contact</h5>
+          <p>
+            <i class="fab fa-telegram me-2"></i>
+            <a href="https://t.me/likhonsheikh" class="text-light" target="_blank" rel="noopener">
+              @likhonsheikh
+            </a>
+          </p>
+          <p>
+            <i class="fab fa-github me-2"></i>
+            <a href="https://github.com/codienters" class="text-light" target="_blank" rel="noopener">
+              codienters
+            </a>
+          </p>
+        </div>
+      </div>
+      <hr class="my-4">
+      <div class="row">
+        <div class="col-md-6">
+          <p>&copy; {{ 'now' | date: "%Y" }} Sheikh-CLI. All rights reserved.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p>
+            <a href="/privacy/" class="text-light me-3">Privacy Policy</a>
+            <a href="/terms/" class="text-light">Terms of Service</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+  
+  <!-- Analytics -->
+  {% if site.google_analytics %}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ site.google_analytics }}');
+  </script>
+  {% endif %}
+</body>
+</html>
