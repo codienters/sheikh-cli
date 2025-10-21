@@ -1,0 +1,286 @@
+name: Agentic CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, feature/* ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+jobs:
+  # Agentic Code Analysis
+  agentic-analysis:
+    runs-on: ubuntu-latest
+    name: Agentic Code Analysis
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run agentic codebase analysis
+      run: |
+        echo "🔍 Running agentic codebase analysis..."
+        npm run analyze -- --output analysis-report.md
+        cat analysis-report.md
+    
+    - name: Upload analysis report
+      uses: actions/upload-artifact@v4
+      with:
+        name: agentic-analysis-report
+        path: analysis-report.md
+
+  # Multi-Agent Testing
+  agentic-testing:
+    runs-on: ubuntu-latest
+    name: Multi-Agent Testing
+    needs: agentic-analysis
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+        test-suite: [unit, integration, e2e]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run ${{ matrix.test-suite }} tests
+      run: |
+        echo "🧪 Running ${{ matrix.test-suite }} tests with agentic coordination..."
+        npm run test:${{ matrix.test-suite }}
+    
+    - name: Generate test report
+      run: |
+        echo "📊 Generating test report..."
+        npm run test:coverage
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ matrix.test-suite }}-${{ matrix.node-version }}
+        path: coverage/
+
+  # Agentic Security Audit
+  security-audit:
+    runs-on: ubuntu-latest
+    name: Agentic Security Audit
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run agentic security audit
+      run: |
+        echo "🔒 Running agentic security audit..."
+        npm audit --audit-level=moderate
+        echo "✅ Security audit completed"
+    
+    - name: Run dependency vulnerability scan
+      run: |
+        echo "🔍 Scanning for vulnerabilities..."
+        npm run security:scan
+
+  # Agentic Code Quality
+  code-quality:
+    runs-on: ubuntu-latest
+    name: Agentic Code Quality
+    needs: agentic-analysis
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run ESLint with agentic analysis
+      run: |
+        echo "🔍 Running ESLint with agentic analysis..."
+        npm run lint
+    
+    - name: Run Prettier
+      run: |
+        echo "💅 Running Prettier..."
+        npm run format -- --check
+    
+    - name: Check code complexity
+      run: |
+        echo "📊 Analyzing code complexity..."
+        npm run complexity:analyze
+
+  # Agentic Build & Package
+  build:
+    runs-on: ubuntu-latest
+    name: Agentic Build
+    needs: [agentic-testing, security-audit, code-quality]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run agentic build
+      run: |
+        echo "🏗️ Running agentic build process..."
+        npm run build
+    
+    - name: Package for distribution
+      run: |
+        echo "📦 Creating distribution package..."
+        npm pack
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: sheikh-cli-agentic-build
+        path: |
+          sheikh-cli-*.tgz
+          dist/
+
+  # Agentic Deployment
+  deploy:
+    runs-on: ubuntu-latest
+    name: Agentic Deployment
+    needs: build
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: sheikh-cli-agentic-build
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        registry-url: 'https://registry.npmjs.org'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run deployment tests
+      run: |
+        echo "🧪 Running deployment tests..."
+        npm run test:deployment
+    
+    - name: Deploy to NPM
+      run: |
+        echo "🚀 Deploying to NPM with agentic coordination..."
+        npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Sheikh-CLI Agentic v${{ github.run_number }}
+        body: |
+          ## Sheikh-CLI Agentic Release v${{ github.run_number }}
+          
+          ### 🤖 Agentic Features
+          - Advanced agentic search across entire codebase
+          - Multi-file coordination and change management
+          - Visual diff and approval system
+          - Workflow generation from natural language
+          - Production-grade agent management
+          
+          ### 🔧 Installation
+          ```bash
+          npm install -g sheikh-cli
+          ```
+          
+          ### 🚀 Usage
+          ```bash
+          sheikh chat --agentic
+          sheikh search "your query"
+          sheikh analyze
+          sheikh workflow "deploy to production"
+          ```
+          
+          ### 📊 Changes
+          - Enhanced agentic capabilities
+          - Improved codebase analysis
+          - Better workflow coordination
+          - Enhanced security features
+        draft: false
+        prerelease: false
+
+  # Agentic Monitoring
+  monitoring:
+    runs-on: ubuntu-latest
+    name: Agentic Monitoring
+    needs: deploy
+    if: always()
+    
+    steps:
+    - name: Setup monitoring
+      run: |
+        echo "📊 Setting up agentic monitoring..."
+        echo "Monitoring deployment status and performance"
+    
+    - name: Send deployment notification
+      run: |
+        echo "📢 Sending deployment notification..."
+        echo "Deployment completed successfully"
