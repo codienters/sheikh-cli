@@ -12,10 +12,18 @@
     "test": "jest",
     "test:watch": "jest --watchAll",
     "test:coverage": "jest --coverage",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:e2e": "jest --testPathPattern=e2e",
+    "test:deployment": "jest --testPathPattern=deployment",
     "lint": "eslint src/**/*.js",
     "lint:fix": "eslint src/**/*.js --fix",
     "format": "prettier --write src/**/*.js",
+    "format:check": "prettier --check src/**/*.js",
     "build": "npm run lint && npm run test",
+    "analyze": "node scripts/analyze.js",
+    "complexity:analyze": "node scripts/complexity.js",
+    "security:scan": "npm audit --audit-level=moderate",
     "postinstall": "node scripts/postinstall.js"
   },
   "keywords": [

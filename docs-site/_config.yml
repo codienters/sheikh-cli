@@ -1,0 +1,141 @@
+# Site settings
+title: Sheikh-CLI Documentation
+description: "AI agents your unfair advantage - powerful AI capabilities in your terminal. Build agents and workflows with our API."
+baseurl: "/sheikh-cli"
+url: "https://codienters.github.io"
+
+# SEO and Social
+author: "Likhon Sheikh"
+email: "likhon@codienters.com"
+github_username: codienters
+telegram: "@likhonsheikh"
+twitter: codienters
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-redirect-from
+  - jekyll-multiple-languages-plugin
+
+# Multiple languages
+languages: ["en", "bn"]
+exclude_from_localizations: ["assets", "images", "js", "css"]
+
+# Collections
+collections:
+  docs:
+    output: true
+    permalink: /:collection/:name/
+  tutorials:
+    output: true
+    permalink: /:collection/:name/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+  - scope:
+      path: ""
+      type: "docs"
+    values:
+      layout: "doc"
+  - scope:
+      path: ""
+      type: "tutorials"
+    values:
+      layout: "tutorial"
+
+# Navigation
+navigation:
+  - title: "Home"
+    url: "/"
+  - title: "Getting Started"
+    url: "/getting-started/"
+  - title: "Agents"
+    url: "/agents/"
+  - title: "Skills"
+    url: "/skills/"
+  - title: "API Reference"
+    url: "/api/"
+  - title: "Tutorials"
+    url: "/tutorials/"
+  - title: "GitHub Actions"
+    url: "/github-actions/"
+  - title: "Contributing"
+    url: "/contributing/"
+
+# Social links
+social:
+  - name: GitHub
+    icon: github
+    url: https://github.com/codienters/sheikh-cli
+  - name: Telegram
+    icon: telegram
+    url: https://t.me/likhonsheikh
+  - name: NPM
+    icon: npm
+    url: https://www.npmjs.com/package/@codienters/sheikh-cli
+
+# Analytics
+google_analytics: G-XXXXXXXXXX
+google_site_verification: "your-google-site-verification"
+
+# Search
+search: true
+search_enabled: true
+
+# Comments
+disqus:
+  shortname: sheikh-cli
+
+# Pagination
+paginate: 10
+paginate_path: "/page/:num/"
+
+# Exclude files
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - README.md
+  - package.json
+  - package-lock.json
+  - .gitignore
+  - .gitattributes
+  - .github
+  - docs
+  - scripts
+  - src
+  - test
+  - coverage
+  - dist
+  - node_modules
+
+# Include files
+include:
+  - _redirects
+
+# Sass
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# Kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+    span:
+      line_numbers: false
+    block:
+      line_numbers: false

@@ -1,11 +1,18 @@
-# Sheikh-CLI: AI Agents Your Unfair Advantage
-
-> **Powerful AI capabilities in your terminal. Build agents and workflows with our API. Turn hours-long workflows into a single command.**
+<div align="center">
+  <img src=".sheikh/logo.png" alt="Sheikh-CLI Logo" width="120" height="120">
+  
+  # Sheikh-CLI: AI Agents Your Unfair Advantage
+  
+  > **Powerful AI capabilities in your terminal. Build agents and workflows with our API. Turn hours-long workflows into a single command.**
+</div>
 
 [![npm version](https://badge.fury.io/js/@codienters/sheikh-cli.svg)](https://badge.fury.io/js/@codienters/sheikh-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen.svg)](https://nodejs.org/)
-[![CI/CD Pipeline](https://github.com/codienters/sheikh-cli/workflows/Agentic%20CI/CD%20Pipeline/badge.svg)](https://github.com/codienters/sheikh-cli/actions)
+[![CI Pipeline](https://github.com/codienters/sheikh-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/codienters/sheikh-cli/actions/workflows/ci.yml)
+[![Release Pipeline](https://github.com/codienters/sheikh-cli/actions/workflows/release.yml/badge.svg)](https://github.com/codienters/sheikh-cli/actions/workflows/release.yml)
+[![Agentic CI/CD](https://github.com/codienters/sheikh-cli/actions/workflows/agentic-ci.yml/badge.svg)](https://github.com/codienters/sheikh-cli/actions/workflows/agentic-ci.yml)
+[![Dependency Updates](https://github.com/codienters/sheikh-cli/actions/workflows/dependency-updates.yml/badge.svg)](https://github.com/codienters/sheikh-cli/actions/workflows/dependency-updates.yml)
 
 ## 🚀 What is Sheikh-CLI?
 
@@ -20,6 +27,10 @@ Sheikh-CLI is an **agentic coding tool** that lives in your terminal and helps y
 - **🛡️ Production-Grade**: Never modifies files without explicit approval
 - **🔧 IDE Integration**: Works with VS Code, JetBrains, and any terminal
 - **🌐 Multi-Provider**: Supports Anthropic, OpenAI, AWS Bedrock, Google Vertex AI, and more
+
+<div align="center">
+  <img src=".sheikh/banner.jpg" alt="Sheikh-CLI Banner" width="800" height="400">
+</div>
 
 ## 🎯 Why Sheikh-CLI?
 
@@ -326,6 +337,7 @@ sheikh config --enable-terminal-integration
 
 - **[CLAUDE.md](CLAUDE.md)** - Comprehensive development guide
 - **[AGENTS.md](AGENTS.md)** - Agent system documentation
+- **[GitHub Actions Setup](docs/github-actions-setup.md)** - Complete CI/CD setup guide
 - **[API Reference](docs/api.md)** - Complete API documentation
 - **[Examples](examples/)** - Usage examples and tutorials
 - **[Contributing](CONTRIBUTING.md)** - How to contribute
@@ -346,6 +358,168 @@ npm run test:coverage
 npm run test:unit
 npm run test:integration
 npm run test:e2e
+```
+
+## 🔄 GitHub Actions & CI/CD
+
+Sheikh-CLI uses comprehensive GitHub Actions workflows for automated testing, building, and deployment.
+
+### 🚀 Available Workflows
+
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| **CI Pipeline** | Push/PR to main/develop | Lint, test, build, security audit |
+| **Release Pipeline** | Git tags, manual dispatch | Build, test, publish to NPM, create releases |
+| **Agentic CI/CD** | Push/PR to main/develop | Advanced agentic analysis and testing |
+| **Dependency Updates** | Weekly schedule, manual | Automated dependency updates and security patches |
+
+### 📋 Repository Secrets
+
+Configure these secrets in your GitHub repository settings:
+
+#### Required Secrets
+
+| Secret Name | Description | Required For |
+|-------------|-------------|--------------|
+| `NPM_TOKEN` | NPM authentication token | Publishing packages to NPM |
+| `GITHUB_TOKEN` | GitHub API token | Creating releases and PRs |
+
+#### Optional Secrets (for enhanced features)
+
+| Secret Name | Description | Required For |
+|-------------|-------------|--------------|
+| `CODECOV_TOKEN` | Codecov upload token | Coverage reporting |
+| `SLACK_WEBHOOK` | Slack webhook URL | Deployment notifications |
+| `DISCORD_WEBHOOK` | Discord webhook URL | Release notifications |
+
+### 🔧 Setting Up Repository Secrets
+
+1. **Go to Repository Settings**
+   ```
+   GitHub Repository → Settings → Secrets and variables → Actions
+   ```
+
+2. **Add NPM_TOKEN**
+   ```bash
+   # Generate NPM token
+   npm login
+   npm token create --read-only=false
+   
+   # Add to GitHub secrets
+   Name: NPM_TOKEN
+   Value: npm_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   ```
+
+3. **Verify Setup**
+   ```bash
+   # Check workflow status
+   GitHub Repository → Actions tab
+   
+   # Verify CI pipeline runs on push/PR
+   # Verify release pipeline runs on tag creation
+   ```
+
+### 🏗️ Workflow Details
+
+#### CI Pipeline (`.github/workflows/ci.yml`)
+- **Lint & Format Check**: ESLint and Prettier validation
+- **Test Suite**: Runs tests on Node.js 18.x and 20.x
+- **Build Check**: Validates build process
+- **Security Audit**: Checks for vulnerabilities
+- **Coverage Reporting**: Uploads coverage to Codecov
+
+#### Release Pipeline (`.github/workflows/release.yml`)
+- **Version Management**: Handles semantic versioning
+- **Build & Test**: Comprehensive testing before release
+- **NPM Publishing**: Publishes to `@codienters/sheikh-cli`
+- **GitHub Releases**: Creates tagged releases with changelog
+- **Artifact Management**: Uploads build artifacts
+
+#### Agentic CI/CD (`.github/workflows/agentic-ci.yml`)
+- **Agentic Analysis**: Advanced codebase analysis
+- **Multi-Agent Testing**: Coordinated testing across agents
+- **Security Audit**: Enhanced security scanning
+- **Code Quality**: Advanced quality metrics
+- **Deployment**: Automated deployment with monitoring
+
+#### Dependency Updates (`.github/workflows/dependency-updates.yml`)
+- **Weekly Schedule**: Runs every Monday at 9 AM UTC
+- **Update Detection**: Identifies outdated packages
+- **Security Patches**: Applies security fixes
+- **Automated PRs**: Creates pull requests for updates
+- **Testing**: Validates updates before merging
+
+### 📊 Workflow Status Badges
+
+Add these badges to your README:
+
+```markdown
+[![CI Pipeline](https://github.com/codienters/sheikh-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/codienters/sheikh-cli/actions/workflows/ci.yml)
+[![Release Pipeline](https://github.com/codienters/sheikh-cli/actions/workflows/release.yml/badge.svg)](https://github.com/codienters/sheikh-cli/actions/workflows/release.yml)
+[![Agentic CI/CD](https://github.com/codienters/sheikh-cli/actions/workflows/agentic-ci.yml/badge.svg)](https://github.com/codienters/sheikh-cli/actions/workflows/agentic-ci.yml)
+```
+
+### 🚀 Manual Workflow Triggers
+
+#### Release a New Version
+```bash
+# Create and push a tag
+git tag v2.0.2
+git push origin v2.0.2
+
+# Or trigger manually via GitHub UI
+# Actions → Release Pipeline → Run workflow
+```
+
+#### Update Dependencies
+```bash
+# Trigger dependency update workflow
+# GitHub UI → Actions → Dependency Updates → Run workflow
+```
+
+#### Run Agentic Analysis
+```bash
+# Trigger agentic CI/CD workflow
+# GitHub UI → Actions → Agentic CI/CD → Run workflow
+```
+
+### 🔍 Monitoring & Notifications
+
+#### Workflow Notifications
+- **Success**: Automatic notifications on successful deployments
+- **Failure**: Immediate alerts on workflow failures
+- **Security**: Alerts for security vulnerabilities
+- **Updates**: Notifications for dependency updates
+
+#### Monitoring Dashboard
+- **GitHub Actions**: Built-in workflow monitoring
+- **NPM**: Package download statistics
+- **Codecov**: Coverage trends and reports
+- **Security**: Vulnerability scanning results
+
+### 🛠️ Customization
+
+#### Environment-Specific Deployments
+```yaml
+# In workflow files
+environment: ${{ github.event.inputs.environment || 'production' }}
+```
+
+#### Custom Test Suites
+```yaml
+# Add custom test matrices
+strategy:
+  matrix:
+    node-version: [18.x, 20.x]
+    test-suite: [unit, integration, e2e]
+```
+
+#### Branch Protection
+```bash
+# Enable branch protection rules
+# Settings → Branches → Add rule
+# Require status checks: CI Pipeline, Agentic CI/CD
+# Require up-to-date branches: true
 ```
 
 ## 🚀 Development
@@ -434,9 +608,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Ready to give yourself an unfair advantage?** Install Sheikh-CLI today and experience the future of AI-powered development.
-
-```bash
-npm install -g @codienters/sheikh-cli
-sheikh chat --agentic
-```
+<div align="center">
+  <img src=".sheikh/logo.png" alt="Sheikh-CLI Logo" width="80" height="80">
+  
+  **Ready to give yourself an unfair advantage?** Install Sheikh-CLI today and experience the future of AI-powered development.
+  
+  ```bash
+  npm install -g @codienters/sheikh-cli
+  sheikh chat --agentic
+  ```
+</div>
